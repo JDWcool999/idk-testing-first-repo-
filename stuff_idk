@@ -1,0 +1,153 @@
+<!DOCTYPE html> 
+<html>
+    <head>
+        <meta charset="utf-8">
+        <title>Goofy </title>
+        <style>
+            body{
+                overflow:hidden;
+                margin:0;
+            }
+            #renderCanvas{
+                width:600px;
+                height:600px;
+            }
+        </style>
+        
+        <script src = 'https://cdn.jsdelivr.net/npm/babylonjs@6.23.0/babylon.min.js'></script>
+        <script src = "https://cdn.jsdelivr.net/npm/cannon@0.6.2/build/cannon.min.js"></script>
+
+        <script>
+        window.addEventListener('DOMContentLoaded', function(){
+                var canvas = document.getElementById('renderCanvas');
+                canvas.getContext = function(type, data) {
+                    data.preserveDrawingBuffer = true;
+                    return HTMLCanvasElement.prototype.getContext.call(canvas, type, data);
+                }
+                const engine = new BABYLON.Engine(canvas, true);
+            function run(){
+                    let hov = 0;
+                    let rot = 0;
+                const scene = new BABYLON.Scene(engine);
+                        scene.clearColor = new BABYLON.Color3(0, 0.804, 1);
+                        const gravityVector = new BABYLON.Vector3(0,-20,0);
+        scene.enablePhysics(gravityVector, new BABYLON.CannonJSPlugin());
+
+                // Camera
+                const camera = new BABYLON.ArcRotateCamera("Camera", Math.PI / 2, Math.PI / 5, 5);
+                camera.attachControl(canvas, true);
+
+                // lighting
+                const light = new BABYLON.HemisphericLight('light', new BABYLON.Vector3(0, 1, 0), scene);
+    
+                const cube = BABYLON.Mesh.CreateBox("cube", 1, scene);
+                
+                scene.registerAfterRender(function() {
+                    cube.position = new BABYLON.Vector3(0, Math.sin(hov), 0);
+                    
+                function createBox(x, y, z, w, h, d, xRot, yRot, zRot, clr){
+                const Box = BABYLON.MeshBuilder.CreateBox('Box', {width: w, height: h, depth: d}, scene);
+                
+                Box.material = new BABYLON.StandardMaterial("BoxMaterial", scene);
+                Box.material.diffuseColor = clr;
+                Box.position = new BABYLON.Vector3(x, y, z);
+                Box.rotation = new BABYLON.Vector3(xRot, yRot, zRot);
+                    Box.physicsImpostor = new BABYLON.PhysicsImpostor(Box, BABYLON.PhysicsImpostor.BoxImpostor, {mass: 1, restitution: 0.5}, scene);
+
+
+        }
+                createBox(0, 0, 0, 1, 1, 1, 0, 0.5, 0, new BABYLON.Color3(0.5, 0.5, 0.5));
+                
+                cube.rotation = new BABYLON.Vector3(0, rot, 0);
+                    
+                });
+
+    
+                /*function createBox(x, y, z, w, h, d, xRot, yRot, zRot, clr){
+                    const Box = BABYLON.MeshBuilder.CreateBox('Box', {width: w, height: h, depth: d}, scene);
+                    
+                    Box.material = new BABYLON.StandardMaterial("BoxMaterial", scene);
+                    Box.material.diffuseColor = clr;
+                    Box.position = new BABYLON.Vector3(x, y, z);
+                    Box.rotation = new BABYLON.Vector3(xRot, yRot, zRot);
+
+        }
+                createBox(0, 0, 0, 1, 0.5, 1, 0, 0, 0, new BABYLON.Color3(0.5, 0.5, 0.5));
+            
+            function createSphere(x, y, z, s, d, clr){
+                const Sphere = BABYLON.MeshBuilder.CreateSphere('sphere', {segments: s, diameter: d}, scene);
+                Sphere.material = new BABYLON.StandardMaterial("sphereMaterial", scene);
+                Sphere.material.diffuseColor = clr;
+                Sphere.position = new BABYLON.Vector3(x, y, z);
+            }
+            createSphere(0, 0.6, 0.0, 10, 1, new BABYLON.Color3(0.5, 0.5, -1.4));
+            
+            
+            function createCylinder(x, y, z, h, dt, db, xRot, yRot, zRot, clr){
+                const Cylinder = BABYLON.MeshBuilder.CreateCylinder("cylinder", {height: h, diameterTop:dt, diameterBottom:db}, scene);
+                Cylinder.material = new BABYLON.StandardMaterial("cylinderMaterial", scene);
+                Cylinder.material.diffuseColor = clr;
+                Cylinder.position = new BABYLON.Vector3(x, y, z);
+                Cylinder.rotation = new BABYLON.Vector3(xRot, yRot, zRot);
+            }
+                createCylinder(-1.5, 0, 0, 1, 1, 1, 0, 0, 0, new BABYLON.Color3(0.5, 0.5, 0.5));
+
+
+
+            function createTorus(x, y, z, d, t, xRot, yRot, zRot, clr){
+                const Torus = BABYLON.MeshBuilder.CreateTorus("torus", {diameter:d, thickness:t}, scene);
+                Torus.material = new BABYLON.StandardMaterial("cylinderMaterial", scene);
+                Torus.material.diffuseColor = clr;
+                Torus.position = new BABYLON.Vector3(x, y, z);
+                Torus.rotation = new BABYLON.Vector3(xRot, yRot, zRot);
+            }
+            createTorus(0, 0, -1.5, 1, 0.2, 0, 0, 0, new BABYLON.Color3(0.5, 0.5, 0.5));*/
+
+                /*const ring = BABYLON.MeshBuilder.CreateTorus("ring", {diameter: 1, thickness: 0.1}, scene);
+                ring.material = new BABYLON.StandardMaterial("ringMaterial", scene);
+                ring.material.diffuseColor = new BABYLON.Color3(0.5, 0.8, 0.5);
+                ring.rotation = new BABYLON.Vector3(-2.3, 0, 0);
+                const cylinder = BABYLON.MeshBuilder.CreateCylinder("cylinder", {height: 1.5, diameterTop: 1, diameterBottom: 1}, scene);
+                cylinder.material = new BABYLON.StandardMaterial("cylinderMaterial", scene);
+                cylinder.material.diffuseColor = new BABYLON.Color3(0.5, 0.8, 0.5);
+                 cylinder.rotation = new BABYLON.Vector3(-0.5, 0, 0);
+    
+            const ball = BABYLON.MeshBuilder.CreateSphere("ball", {segments: 12, diameter: 1}, scene);
+                ball.material = new BABYLON.StandardMaterial("ballMaterial", scene);
+                ball.material.diffuseColor = new BABYLON.Color3(0.5, 0.8, 0.5);
+                const cube = BABYLON.MeshBuilder.CreateBox("cube", {width: 1, height: 1, depth: 0.2}, scene);
+                cube.material = new BABYLON.StandardMaterial("cubeMaterial", scene);
+                cube.material.diffuseColor = new BABYLON.Color3(0.5, 0.8, 0.5);
+                cube.position = new BABYLON.Vector3(0, 0, 0);
+                cube.rotation = new BABYLON.Vector3(-1.2, 0, -1);*/
+        
+                return scene;
+            }
+            const scene = run();
+            
+            engine.runRenderLoop(function(){
+                scene.render();
+            });
+        });
+        </script>
+        
+    
+    </head>
+    <body>
+        <canvas id = "renderCanvas"></canvas>
+    </body>
+</html>
+
+<!--
+Just learning/expiermenting with babylon.js, i want to make some 3d games later on.....
+
+
+no way this passes my subpage XD :/
+
+
+@Credits: 
+    Tutorial by dipper98: https://www.khanacademy.org/computer-programming/a/4610446517256192
+    
+    
+
+-->
